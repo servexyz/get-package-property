@@ -35,7 +35,6 @@
     "fs-extra": "^8.1.0",
     "is-path-inside": "^3.0.1",
     "pkg-up": "^3.1.0",
-    "read-pkg": "^5.2.0",
     "tacker": "^0.1.2"
   },
   "scripts": {

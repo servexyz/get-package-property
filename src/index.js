@@ -1,10 +1,9 @@
 import is from "@sindresorhus/is";
-import readPkg from "read-pkg";
 import pkgUp from "pkg-up";
-import isPathInside from "is-path-inside";
-import { printLine } from "tacker";
 import fs from "fs-extra";
+import isPathInside from "is-path-inside";
 import chalk from "chalk";
+import { printLine } from "tacker";
 
 export default function getPackageProperty(package, szNameOfProperty) {
   let sourceType = is(szNameOfProperty);
@@ -30,7 +29,7 @@ async function handleUndefined(szNameOfProperty) {
   try {
     pkgPath = await pkgUp();
   } catch (err) {
-    handleError("handleUndefined", err, "readPkgUp failed");
+    handleError("handleUndefined", err, "pkgUp failed");
   }
   handleString(pkgPath, szNameOfProperty);
 }
@@ -42,7 +41,7 @@ async function handleString(packagePath, szNameOfProperty) {
   try {
     pkgJSON = await fs.readJson(pathToParse);
   } catch (err) {
-    handleError("handleString", err, "fs.readJson failed");
+    handleError("handleString", err, "readJson failed");
   }
   //TODO: check if pathToParse exists
   //TODO: add path-exists
@@ -70,14 +69,3 @@ function handleError(szFnName, szErr, szCustomErr) {
   }
   printLine("red");
 }
-
-// export function getPackageProperty(package, szNameOfProperty) {
-//   let packageJSON;
-//   let sourceType = is(package);
-//   if (sourceType === "undefined") {
-
-//   } else if (sourceType === "string") {
-
-//   } else if (sourceType === "Object") {
-//   }
-// }
