@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/servexyz/node-starter"
+    "url": "https://github.com/servexyz/get-pkg-prop"
   },
   "devDependencies": {
     "@ava/babel-preset-stage-4": "^3.0.0",
