@@ -24,7 +24,7 @@ export default function getPackageProperty(package, szNameOfProperty) {
   }
 }
 
-async function handleUndefined(szNameOfProperty) {
+export async function handleUndefined(szNameOfProperty) {
   let pkgPath;
   try {
     pkgPath = await pkgUp();
@@ -33,7 +33,7 @@ async function handleUndefined(szNameOfProperty) {
   }
   handleString(pkgPath, szNameOfProperty);
 }
-async function handleString(packagePath, szNameOfProperty) {
+export async function handleString(packagePath, szNameOfProperty) {
   let pathToParse, pkgJSON;
   if (!isPathInside("package.json", packagePath)) {
     pathToParse += "package.json";
@@ -47,13 +47,22 @@ async function handleString(packagePath, szNameOfProperty) {
   //TODO: add path-exists
   handleObject(pkgJSON, szNameOfProperty);
 }
-function handleObject(packageJSON, szNameOfProperty) {
+export function handleObject(packageJSON, szNameOfProperty) {
+  let propValue;
   if (!packageJSON.hasOwnProperty(szNameOfProperty)) {
+    handleError("handleObject");
+  }
+  Object.entries(packageJSON).map(([key, val]) => {
+    if (key === szNameOfProperty) propValue = val;
+  });
+  if (!is.undefined(propValue)) {
+    return propValue;
+  } else {
     handleError("handleObject");
   }
   //TODO: Brainstorm using szNameOfProperty in object destructuring
 }
-function handleError(szFnName, szErr, szCustomErr) {
+export function handleError(szFnName, szCustomErr, szErr) {
   //TODO: Add initial undefined & emptyString check. Then concat all instead of piecemeal
   printLine("red");
   if (!is.undefined(szFnName)) {
