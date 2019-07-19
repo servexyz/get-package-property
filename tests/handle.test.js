@@ -1,11 +1,12 @@
 import test from "ava";
 import {
-  getPackageProperty,
   handleUndefined,
   handleString,
-  handleObject
+  handleObject,
+  getPkgProp
 } from "../src/index";
 import { printMirror, printLine } from "tacker";
+import readPkgUp from "read-pkg-up";
 
 const { name } = require("../package.json");
 test("handleUndefined gets package from get-pkg-prop", async t => {
@@ -28,4 +29,16 @@ test("handleString gets package from get-pkg-prop", async t => {
   );
   // printMirror({ shouldBeNameTwo }, "blue", "grey");
   t.is(name, shouldBeNameTwo);
+});
+
+test.skip("handleObject gets package from get-pkg-prop", async t => {
+  let pkgJSON = await readPkgUp();
+  printMirror({ pkgJSON }, "magenta", "grey");
+  let shouldBeName = await handleObject(pkgJSON, "name");
+  t.is(name, shouldBeName);
+});
+
+test.skip("getPkgProp parses undefined correctly and returns value", t => {
+  let shouldBeName = getPkgProp("name");
+  t.is(name, shouldBeName);
 });

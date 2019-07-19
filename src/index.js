@@ -6,23 +6,17 @@ import fs from "fs-extra";
 import chalk from "chalk";
 import { printLine, printMirror } from "tacker";
 
-//TODO: Change call order (szProperty first since pkg is optional)
-export default function getPkgProp(pkg, szProperty) {
+export function getPkgProp(szProperty, pkg) {
   let sourceType = is(szProperty);
   switch (sourceType) {
     case "undefined":
-      handleUndefined(szProperty);
-      break;
+      return handleUndefined(szProperty);
     case "string":
-      handleString(pkg, szProperty);
-      break;
+      return handleString(pkg, szProperty);
     case "Object":
-      handleObject(pkg, szProperty);
-      break;
+      return handleObject(pkg, szProperty);
     default:
-      return `${chalk.yellow(
-        "printVersion"
-      )} doesn't recognize the param type. \nAccepted argument types: null, pkgPath<sz>, pkgObject<JSON>`;
+      handleError("printVersion", "Unrecognized argument type");
   }
 }
 
@@ -36,6 +30,7 @@ export async function handleUndefined(szProperty) {
   return handleString(pkgPath, szProperty);
 }
 
+//TODO: Change call order to match getPkgProp
 export async function handleString(szPkgPath, szProperty) {
   let pkgJSON,
     pkgPath = szPkgPath;
@@ -52,10 +47,12 @@ export async function handleString(szPkgPath, szProperty) {
   return handleObject(pkgJSON, szProperty);
 }
 
-export function handleObject(pkgJSON, szProperty) {
+//TODO: Change call order to match getPkgProp
+export async function handleObject(pkgJSON, szProperty) {
   let propValue;
+  printMirror({ pkgJSON }, "cyan", "grey");
   if (pkgJSON.hasOwnProperty(szProperty) === false) {
-    handleError("handleObject");
+    handleError("handleObject", "property not found");
   }
   Object.entries(pkgJSON).map(([key, val]) => {
     if (key === szProperty) {
