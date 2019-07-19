@@ -1,3 +1,4 @@
+const log = console.log;
 import test from "ava";
 import {
   getPkgUpJSON,
@@ -7,7 +8,7 @@ import {
   getPkgProp
 } from "../src/index";
 import { printMirror, printLine } from "tacker";
-
+import is from "@sindresorhus/is";
 const { name } = require("../package.json");
 test("handleUndefined gets package from get-pkg-prop", async t => {
   let shouldBeName = await handleUndefined("name");
@@ -17,7 +18,6 @@ test("handleUndefined gets package from get-pkg-prop", async t => {
 test("handleString gets package from get-pkg-prop", async t => {
   t.plan(2);
   let dir = process.cwd();
-  printMirror({ dir }, "blue", "grey");
   let shouldBeNameOne = await handleString("name", dir);
   let shouldBeNameTwo = await handleString("name", dir);
   t.is(name, shouldBeNameOne);
@@ -41,9 +41,8 @@ test("getPkgProp parses <string> correctly and returns value", async t => {
   t.is(name, shouldBeName);
 });
 
-test.skip("getPkgProp parses <object> correctly and returns value", async t => {
+test("getPkgProp parses <object> correctly and returns value", async t => {
   let pkgJSON = await getPkgUpJSON();
   let shouldBeName = await getPkgProp("name", pkgJSON);
-  printMirror({ shouldBeName });
   t.is(name, shouldBeName);
 });
