@@ -34,7 +34,6 @@
     "chalk": "^2.4.2",
     "dotenv": "^8.0.0",
     "fs-extra": "^8.1.0",
-    "is-path-inside": "^3.0.1",
     "pkg-up": "^3.1.0",
     "tacker": "^0.1.2"
   },
@@ -48,8 +47,9 @@
     "dev:liveReloadedModule": "nodemon --watch src/index.js --exec 'babel-node src/index.js'",
     "dev:liveReloadedDocker": "npm-run-all -p docker:compose dev:liveReloadedModule docker:liveReload ",
     "dev:server": "webpack --mode development --watch --display minimal",
-    "test": "snyk test && npm-run-all -s clean:build build test:liveReloadedAva",
+    "test": "npm-run-all -s clean:build build test:liveReloadedAva",
     "test:ava": "ava",
+    "test:snyk": "snyk test",
     "test:liveReloadedAva": "ava --watch",
     "publish": "npm run build && npm run publish:np",
     "production": "npm run build && node build/main.js",
@@ -62,13 +62,17 @@
     "ci:prepare": "npm install -g trevor gnomon"
   },
   "ava": {
-    "files": [
-      "!npm-starter-sample-module/**/*.js",
-      "tests/**/*"
-    ],
     "require": [
-      "@babel/register",
-      "@babel/polyfill"
+      "@babel/register"
+    ],
+    "babel": {
+      "testOptions": {
+        "babelrc": true,
+        "configFile": true
+      }
+    },
+    "files": [
+      "tests/**/*"
     ],
     "verbose": true
   }

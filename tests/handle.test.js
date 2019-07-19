@@ -5,7 +5,11 @@ import {
   handleString,
   handleObject
 } from "../src/index";
+import { printMirror } from "tacker";
 
-test("handleUndefined gets package from get-pkg-prop", t => {
-  handleUndefined();
+const { name } = require("../package.json");
+test("handleUndefined gets package from get-pkg-prop", async t => {
+  let shouldBeName = await handleUndefined("name");
+  printMirror({ shouldBeName }, "blue", "grey");
+  t.is(name, shouldBeName);
 });

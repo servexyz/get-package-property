@@ -1,67 +1,78 @@
+import path from "path";
 import is from "@sindresorhus/is";
 import pkgUp from "pkg-up";
 import fs from "fs-extra";
-import isPathInside from "is-path-inside";
 import chalk from "chalk";
-import { printLine } from "tacker";
+import { printLine, printMirror } from "tacker";
 
-export default function getPackageProperty(package, szNameOfProperty) {
-  let sourceType = is(szNameOfProperty);
+export default function getPkgProp(pkg, szProperty) {
+  let sourceType = is(szProperty);
   switch (sourceType) {
     case "undefined":
-      handleUndefined(szNameOfProperty);
+      handleUndefined(szProperty);
       break;
     case "string":
-      handleString(package, szNameOfProperty);
+      handleString(pkg, szProperty);
       break;
     case "Object":
-      handleObject(package, szNameOfProperty);
+      handleObject(pkg, szProperty);
       break;
     default:
       return `${chalk.blue(
         "printVersion"
-      )} doesn't recognize the param type. \nAccepted argument types: null, packagePath<sz>, packageObject<JSON>`;
+      )} doesn't recognize the param type. \nAccepted argument types: null, pkgPath<sz>, pkgObject<JSON>`;
   }
 }
 
-export async function handleUndefined(szNameOfProperty) {
+export async function handleUndefined(szProperty) {
   let pkgPath;
   try {
     pkgPath = await pkgUp();
+    printMirror({ pkgPath }, "magenta", "grey");
   } catch (err) {
     handleError("handleUndefined", err, "pkgUp failed");
   }
-  handleString(pkgPath, szNameOfProperty);
+  handleString(pkgPath, szProperty);
 }
-export async function handleString(packagePath, szNameOfProperty) {
-  let pathToParse, pkgJSON;
-  if (!isPathInside("package.json", packagePath)) {
-    pathToParse += "package.json";
+export async function handleString(szPkgPath, szProperty) {
+  let pkgJSON,
+    pkgPath = "/Users/alechp/Code/servexyz/get-pkg-prop";
+  // pkgPath = szPkgPath;
+  if (!pkgPath.endsWith("package.json")) {
+    pkgPath = path.join(pkgPath, "/package.json");
   }
   try {
-    pkgJSON = await fs.readJson(pathToParse);
+    printMirror({ pkgPath }, "green", "grey");
+    pkgJSON = await fs.readJson(pkgPath);
+    printMirror({ pkgJSON }, "magenta", "grey");
   } catch (err) {
     handleError("handleString", err, "readJson failed");
   }
-  //TODO: check if pathToParse exists
+  //TODO: check if pkgPath exists
   //TODO: add path-exists
-  handleObject(pkgJSON, szNameOfProperty);
+  handleObject(pkgJSON, szProperty);
 }
-export function handleObject(packageJSON, szNameOfProperty) {
+export function handleObject(pkgJSON, szProperty) {
   let propValue;
-  if (!packageJSON.hasOwnProperty(szNameOfProperty)) {
+  if (!pkgJSON.hasOwnProperty(szProperty)) {
     handleError("handleObject");
   }
-  Object.entries(packageJSON).map(([key, val]) => {
-    if (key === szNameOfProperty) propValue = val;
+  Object.entries(pkgJSON).map(([key, val]) => {
+    if (key === szProperty) {
+      propValue = val;
+      printMirror({ val }, "green", "grey");
+    }
   });
-  if (!is.undefined(propValue)) {
+  //TODO: Fix this block
+  if (is.truthy(propValue)) {
+    printMirror({ propvalue }, "blue", "grey");
     return propValue;
   } else {
     handleError("handleObject");
   }
-  //TODO: Brainstorm using szNameOfProperty in object destructuring
+  printMirror({ propvalue }, "yellow", "grey");
 }
+
 export function handleError(szFnName, szCustomErr, szErr) {
   //TODO: Add initial undefined & emptyString check. Then concat all instead of piecemeal
   printLine("red");
