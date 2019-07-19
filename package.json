@@ -45,8 +45,6 @@
     "dev": "npm run dev:liveReloadedModule",
     "dev:vanillaModule": "babel-node src/index.js",
     "dev:liveReloadedModule": "nodemon --watch src/index.js --exec 'babel-node src/index.js'",
-    "dev:liveReloadedDocker": "npm-run-all -p docker:compose dev:liveReloadedModule docker:liveReload ",
-    "dev:server": "webpack --mode development --watch --display minimal",
     "test": "npm-run-all -s clean:build build test:liveReloadedAva",
     "test:ava": "ava",
     "test:snyk": "snyk test",
