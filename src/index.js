@@ -31,11 +31,11 @@ export async function handleUndefined(szProperty) {
 }
 
 //TODO: Change call order to match getPkgProp
-export async function handleString(szPkgPath, szProperty) {
+export async function handleString(szPkgPath = process.cwd(), szProperty) {
   let pkgJSON,
     pkgPath = szPkgPath;
   if (!pkgPath.endsWith("package.json")) {
-    pkgPath = path.join(pkgPath, "/package.json");
+    pkgPath = path.resolve(pkgPath, "package.json");
   }
   try {
     pkgJSON = await fs.readJson(pkgPath);
@@ -51,15 +51,17 @@ export async function handleString(szPkgPath, szProperty) {
 export async function handleObject(pkgJSON, szProperty) {
   let propValue;
   printMirror({ pkgJSON }, "cyan", "grey");
-  if (pkgJSON.hasOwnProperty(szProperty) === false) {
-    handleError("handleObject", "property not found");
-  }
-  Object.entries(pkgJSON).map(([key, val]) => {
-    if (key === szProperty) {
-      propValue = val;
+  if (is.object(pkgJSON)) {
+    if (pkgJSON.hasOwnProperty(szProperty) === false) {
+      handleError("handleObject", "property not found");
+    } else {
+      Object.entries(pkgJSON).map(([key, val]) => {
+        if (key === szProperty) {
+          propValue = val;
+        }
+      });
     }
-  });
-  // printLine("blue");
+  } // printLine("blue");
   // printMirror({ propValue }, "blue", "grey");
   // printLine("blue");
   return propValue;

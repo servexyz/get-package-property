@@ -7,6 +7,7 @@ import {
 } from "../src/index";
 import { printMirror, printLine } from "tacker";
 import readPkgUp from "read-pkg-up";
+import path from "path";
 
 const { name } = require("../package.json");
 test("handleUndefined gets package from get-pkg-prop", async t => {
@@ -17,10 +18,10 @@ test("handleUndefined gets package from get-pkg-prop", async t => {
 
 test("handleString gets package from get-pkg-prop", async t => {
   t.plan(2);
-  let shouldBeNameOne = await handleString(
-    "/Users/alechp/Code/servexyz/get-pkg-prop",
-    "name"
-  );
+  // let dir = process.cwd();
+  let dir = path.join(__dirname, "../");
+  printMirror({ dir }, "blue", "grey");
+  let shouldBeNameOne = await handleString(dir, "name");
   // printMirror({ shouldBeNameOne }, "blue", "grey");
   t.is(name, shouldBeNameOne);
   let shouldBeNameTwo = await handleString(
