@@ -9,7 +9,6 @@ import { printLine, printMirror } from "tacker";
 export function getPkgProp(szProperty, pkg) {
   //TODO: Debug why objects are being caught as strings
   let sourceType = is(pkg);
-  // printMirror({ sourceType }, "cyan", "grey");
   try {
     switch (sourceType) {
       case "undefined":
@@ -36,11 +35,9 @@ export async function handleUndefined(szProperty) {
   return handleString(szProperty, pkgPath);
 }
 
-//TODO: Change call order to match getPkgProp
 export async function handleString(szProperty, szPkgPath = process.cwd()) {
   let pkgJSON,
     pkgPath = szPkgPath;
-  // printMirror({ pkgPath }, "magenta", "blue");
   if (pkgPath.endsWith("package.json") === false) {
     pkgPath = path.resolve(pkgPath, "package.json");
   }
@@ -54,7 +51,6 @@ export async function handleString(szProperty, szPkgPath = process.cwd()) {
   return handleObject(szProperty, pkgJSON);
 }
 
-//TODO: Change call order to match getPkgProp
 export async function handleObject(szProperty, oPkgJSON) {
   let propValue;
   let pkgJSON = oPkgJSON;
@@ -70,13 +66,11 @@ export async function handleObject(szProperty, oPkgJSON) {
       });
     }
   }
-  // printLine("blue");
-  // printMirror({ propValue }, "blue", "grey");
-  // printLine("blue");
   return propValue;
 }
 
 export function handleError(szFnName, szCustomErr, szErr) {
+  //TODO: Move to tacker
   //TODO: Add initial undefined & emptyString check. Then concat all instead of piecemeal
   printLine("red");
   if (!is.undefined(szFnName)) {

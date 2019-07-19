@@ -8,8 +8,8 @@ import {
   getPkgProp
 } from "../src/index";
 import { printMirror, printLine } from "tacker";
-import is from "@sindresorhus/is";
 const { name } = require("../package.json");
+
 test("handleUndefined gets package from get-pkg-prop", async t => {
   let shouldBeName = await handleUndefined("name");
   t.is(name, shouldBeName);
