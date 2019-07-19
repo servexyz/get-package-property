@@ -12,9 +12,9 @@ export function getPkgProp(szProperty, pkg) {
     case "undefined":
       return handleUndefined(szProperty);
     case "string":
-      return handleString(pkg, szProperty);
+      return handleString(szProperty, pkg);
     case "Object":
-      return handleObject(pkg, szProperty);
+      return handleObject(szProperty, pkg);
     default:
       handleError("printVersion", "Unrecognized argument type");
   }
@@ -27,11 +27,11 @@ export async function handleUndefined(szProperty) {
   } catch (err) {
     handleError("handleUndefined", err, "pkgUp failed");
   }
-  return handleString(pkgPath, szProperty);
+  return handleString(szProperty, pkgPath);
 }
 
 //TODO: Change call order to match getPkgProp
-export async function handleString(szPkgPath = process.cwd(), szProperty) {
+export async function handleString(szProperty, szPkgPath = process.cwd()) {
   let pkgJSON,
     pkgPath = szPkgPath;
   if (!pkgPath.endsWith("package.json")) {
@@ -44,17 +44,18 @@ export async function handleString(szPkgPath = process.cwd(), szProperty) {
   }
   //TODO: check if pkgPath exists
   //TODO: add path-exists
-  return handleObject(pkgJSON, szProperty);
+  return handleObject(szProperty, pkgJSON);
 }
 
 //TODO: Change call order to match getPkgProp
-export async function handleObject(pkgJSON, szProperty) {
+export async function handleObject(szProperty, pkgJSON) {
   let propValue;
   printMirror({ pkgJSON }, "cyan", "grey");
   if (is.object(pkgJSON)) {
     if (pkgJSON.hasOwnProperty(szProperty) === false) {
       handleError("handleObject", "property not found");
     } else {
+      //? Feel like there's a better way to grab this value than iterating
       Object.entries(pkgJSON).map(([key, val]) => {
         if (key === szProperty) {
           propValue = val;
@@ -83,3 +84,17 @@ export function handleError(szFnName, szCustomErr, szErr) {
   }
   printLine("red");
 }
+
+// let lgPath = path.resolve(process.cwd(), "sandbox", "library-genesis");
+// (async () => {
+//   let x = await handleUndefined("name"); //
+//   printMirror({ x }, "magenta", "grey");
+
+//   let lgObj = await fs.readJson(path.join(lgPath, "package.json"));
+//   let y = await handleString("name", lgPath);
+//   let z = await handleObject("name", lgObj);
+//   printMirror({ y }, "magenta", "grey");
+//   printMirror({ z }, "magenta", "grey");
+//   // x;
+//   // y;
+// })();

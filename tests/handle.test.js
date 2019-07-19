@@ -18,16 +18,13 @@ test("handleUndefined gets package from get-pkg-prop", async t => {
 
 test("handleString gets package from get-pkg-prop", async t => {
   t.plan(2);
-  // let dir = process.cwd();
-  let dir = path.join(__dirname, "../");
+  let dir = process.cwd();
+  // let dir = path.join(__dirname, "../");
   printMirror({ dir }, "blue", "grey");
-  let shouldBeNameOne = await handleString(dir, "name");
+  let shouldBeNameOne = await handleString("name", dir);
   // printMirror({ shouldBeNameOne }, "blue", "grey");
   t.is(name, shouldBeNameOne);
-  let shouldBeNameTwo = await handleString(
-    "/Users/alechp/Code/servexyz/get-pkg-prop/package.json",
-    "name"
-  );
+  let shouldBeNameTwo = await handleString("name", dir);
   // printMirror({ shouldBeNameTwo }, "blue", "grey");
   t.is(name, shouldBeNameTwo);
 });
@@ -35,7 +32,7 @@ test("handleString gets package from get-pkg-prop", async t => {
 test.skip("handleObject gets package from get-pkg-prop", async t => {
   let pkgJSON = await readPkgUp();
   printMirror({ pkgJSON }, "magenta", "grey");
-  let shouldBeName = await handleObject(pkgJSON, "name");
+  let shouldBeName = await handleObject("name", pkgJSON);
   t.is(name, shouldBeName);
 });
 
