@@ -5,6 +5,7 @@ import fs from "fs-extra";
 import chalk from "chalk";
 import { printLine, printMirror } from "tacker";
 
+//TODO: Change call order (szProperty first since pkg is optional)
 export default function getPkgProp(pkg, szProperty) {
   let sourceType = is(szProperty);
   switch (sourceType) {
@@ -32,12 +33,12 @@ export async function handleUndefined(szProperty) {
   } catch (err) {
     handleError("handleUndefined", err, "pkgUp failed");
   }
-  handleString(pkgPath, szProperty);
+  return handleString(pkgPath, szProperty);
 }
+
 export async function handleString(szPkgPath, szProperty) {
   let pkgJSON,
-    pkgPath = "/Users/alechp/Code/servexyz/get-pkg-prop";
-  // pkgPath = szPkgPath;
+    pkgPath = szPkgPath;
   if (!pkgPath.endsWith("package.json")) {
     pkgPath = path.join(pkgPath, "/package.json");
   }
@@ -50,8 +51,9 @@ export async function handleString(szPkgPath, szProperty) {
   }
   //TODO: check if pkgPath exists
   //TODO: add path-exists
-  handleObject(pkgJSON, szProperty);
+  return handleObject(pkgJSON, szProperty);
 }
+
 export function handleObject(pkgJSON, szProperty) {
   let propValue;
   if (!pkgJSON.hasOwnProperty(szProperty)) {
@@ -63,14 +65,8 @@ export function handleObject(pkgJSON, szProperty) {
       printMirror({ val }, "green", "grey");
     }
   });
-  //TODO: Fix this block
-  if (is.truthy(propValue)) {
-    printMirror({ propvalue }, "blue", "grey");
-    return propValue;
-  } else {
-    handleError("handleObject");
-  }
-  printMirror({ propvalue }, "yellow", "grey");
+  printMirror({ propValue }, "yellow", "grey");
+  return propValue;
 }
 
 export function handleError(szFnName, szCustomErr, szErr) {
