@@ -8,6 +8,7 @@ import { printLine, printMirror } from "tacker";
 
 export function getPkgProp(szProperty, pkg) {
   let sourceType = is(szProperty);
+  printMirror({ sourceType }, "cyan", "grey");
   switch (sourceType) {
     case "undefined":
       return handleUndefined(szProperty);
@@ -34,7 +35,8 @@ export async function handleUndefined(szProperty) {
 export async function handleString(szProperty, szPkgPath = process.cwd()) {
   let pkgJSON,
     pkgPath = szPkgPath;
-  if (!pkgPath.endsWith("package.json")) {
+  printMirror({ pkgPath }, "magenta", "blue");
+  if (pkgPath.endsWith("package.json") === false) {
     pkgPath = path.resolve(pkgPath, "package.json");
   }
   try {
@@ -48,10 +50,11 @@ export async function handleString(szProperty, szPkgPath = process.cwd()) {
 }
 
 //TODO: Change call order to match getPkgProp
-export async function handleObject(szProperty, pkgJSON) {
+export async function handleObject(szProperty, oPkgJSON) {
   let propValue;
-  printMirror({ pkgJSON }, "cyan", "grey");
+  let pkgJSON = oPkgJSON;
   if (is.object(pkgJSON)) {
+    log("yes is obj");
     if (pkgJSON.hasOwnProperty(szProperty) === false) {
       handleError("handleObject", "property not found");
     } else {
@@ -62,9 +65,10 @@ export async function handleObject(szProperty, pkgJSON) {
         }
       });
     }
-  } // printLine("blue");
-  // printMirror({ propValue }, "blue", "grey");
-  // printLine("blue");
+  }
+  printLine("blue");
+  printMirror({ propValue }, "blue", "grey");
+  printLine("blue");
   return propValue;
 }
 
@@ -85,16 +89,27 @@ export function handleError(szFnName, szCustomErr, szErr) {
   printLine("red");
 }
 
-// let lgPath = path.resolve(process.cwd(), "sandbox", "library-genesis");
-// (async () => {
-//   let x = await handleUndefined("name"); //
-//   printMirror({ x }, "magenta", "grey");
+export async function getPkgUpJSON() {
+  let pkgPath = await pkgUp();
+  return await fs.readJson(pkgPath);
+}
 
-//   let lgObj = await fs.readJson(path.join(lgPath, "package.json"));
-//   let y = await handleString("name", lgPath);
-//   let z = await handleObject("name", lgObj);
-//   printMirror({ y }, "magenta", "grey");
-//   printMirror({ z }, "magenta", "grey");
-//   // x;
-//   // y;
-// })();
+let lgPath = path.resolve(process.cwd(), "sandbox", "library-genesis");
+(async () => {
+  let x = await handleUndefined("name"); //
+  printMirror({ x }, "magenta", "grey");
+
+  let lgObj = await fs.readJson(path.join(lgPath, "package.json"));
+  let y = await handleString("name", lgPath);
+  let z = await handleObject("name", lgObj);
+  printMirror({ y }, "magenta", "grey");
+  printMirror({ z }, "magenta", "grey");
+  // x;
+  // y;
+  let a = await getPkgProp("name");
+  let b = await getPkgProp("name", lgPath);
+  let c = getPkgProp("name", lgObj);
+  a;
+  b;
+  c;
+})();
