@@ -1,3 +1,4 @@
+const log = console.log;
 import path from "path";
 import is from "@sindresorhus/is";
 import pkgUp from "pkg-up";
@@ -19,7 +20,7 @@ export default function getPkgProp(pkg, szProperty) {
       handleObject(pkg, szProperty);
       break;
     default:
-      return `${chalk.blue(
+      return `${chalk.yellow(
         "printVersion"
       )} doesn't recognize the param type. \nAccepted argument types: null, pkgPath<sz>, pkgObject<JSON>`;
   }
@@ -29,7 +30,6 @@ export async function handleUndefined(szProperty) {
   let pkgPath;
   try {
     pkgPath = await pkgUp();
-    printMirror({ pkgPath }, "magenta", "grey");
   } catch (err) {
     handleError("handleUndefined", err, "pkgUp failed");
   }
@@ -43,9 +43,7 @@ export async function handleString(szPkgPath, szProperty) {
     pkgPath = path.join(pkgPath, "/package.json");
   }
   try {
-    printMirror({ pkgPath }, "green", "grey");
     pkgJSON = await fs.readJson(pkgPath);
-    printMirror({ pkgJSON }, "magenta", "grey");
   } catch (err) {
     handleError("handleString", err, "readJson failed");
   }
@@ -56,16 +54,17 @@ export async function handleString(szPkgPath, szProperty) {
 
 export function handleObject(pkgJSON, szProperty) {
   let propValue;
-  if (!pkgJSON.hasOwnProperty(szProperty)) {
+  if (pkgJSON.hasOwnProperty(szProperty) === false) {
     handleError("handleObject");
   }
   Object.entries(pkgJSON).map(([key, val]) => {
     if (key === szProperty) {
       propValue = val;
-      printMirror({ val }, "green", "grey");
     }
   });
-  printMirror({ propValue }, "yellow", "grey");
+  // printLine("blue");
+  // printMirror({ propValue }, "blue", "grey");
+  // printLine("blue");
   return propValue;
 }
 
