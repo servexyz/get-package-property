@@ -45,7 +45,7 @@
     "dev": "npm run dev:liveReloadedModule",
     "dev:vanillaModule": "babel-node src/index.js",
     "dev:liveReloadedModule": "nodemon --watch src/index.js --exec 'babel-node src/index.js'",
-    "test": "npm-run-all -s clean:build build test:liveReloadedAva",
+    "test": "npm-run-all -s clean:build build test:ava",
     "test:ava": "ava",
     "test:snyk": "snyk test",
     "test:liveReloadedAva": "ava --watch",
