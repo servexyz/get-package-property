@@ -108,9 +108,9 @@ function initTest() {
     let a = await getPkgProp("name");
     let b = await getPkgProp("name", lgPath);
     let c = await getPkgProp("name", lgObj);
-    a;
-    b;
-    c;
+    //   a;
+    //   b;
+    //   c;
   })();
 }
 // initTest()
