@@ -47,7 +47,7 @@ import { getPkgProp } from "get-pkg-prop";
 **Use**
 
 ```js
-getPkgProp("version"); // x.y.z
+await getPkgProp("version"); // x.y.z
 ```
 
 ## API
