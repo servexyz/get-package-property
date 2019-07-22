@@ -1,6 +1,6 @@
 {
   "name": "get-pkg-prop",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "build/main.js",
   "license": "MIT",
   "repository": {
