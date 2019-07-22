@@ -37,6 +37,17 @@
     "pkg-up": "^3.1.0",
     "tacker": "^0.1.2"
   },
+  "keywords": [
+    "servexyz",
+    "npm",
+    "package.json",
+    "package",
+    "properties",
+    "get-pkg-prop",
+    "get package",
+    "get package property",
+    "get package properties"
+  ],
   "scripts": {
     "start": "npm run dev",
     "build": "webpack --mode production --display minimal",
