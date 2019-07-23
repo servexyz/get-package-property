@@ -2,6 +2,7 @@
   "name": "get-pkg-prop",
   "version": "0.2.4",
   "main": "build/main.js",
+  "description": "Pass a key name, get a value from package.json",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -32,7 +33,6 @@
     "@babel/runtime": "^7.5.5",
     "@sindresorhus/is": "^1.0.0",
     "chalk": "^2.4.2",
-    "dotenv": "^8.0.0",
     "fs-extra": "^8.1.0",
     "pkg-up": "^3.1.0",
     "tacker": "^0.1.2"
