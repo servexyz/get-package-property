@@ -4,6 +4,7 @@ import chalk from "chalk";
 import is from "@sindresorhus/is";
 import {
   getPkgUpJSON,
+  handleError,
   handleUndefined,
   handleString,
   handleObject,
@@ -70,4 +71,8 @@ test(`${chalk.cyan(
   t.false(is.nullOrUndefined(await handleUndefined("name")));
   t.true(is.nullOrUndefined(await handleString()));
   t.true(is.nullOrUndefined(await handleObject()));
+});
+
+test(`${chalk.cyan("handleError")} returns false`, t => {
+  t.false(handleError());
 });

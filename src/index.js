@@ -18,10 +18,13 @@ export function getPkgProp(szProperty, pkg) {
       case "Object":
         return handleObject(szProperty, pkg);
       default:
-        handleError("getPkgProp", "Unrecognized argument type");
+        handleError(true, {
+          fn: "getPkgProp",
+          message: "Unrecognized argument type"
+        });
     }
   } catch (err) {
-    handleError("getPkgProp", "handler failed", err);
+    handleError(true, { fn: "getPkgProp", message: "handler failed", err });
   }
 }
 
@@ -31,7 +34,7 @@ export async function handleUndefined(szProperty) {
   try {
     pkgPath = await pkgUp();
   } catch (err) {
-    handleError("handleUndefined", err, "pkgUp failed");
+    handleError(true, { fn: "handleUndefined", err, message: "pkgUp failed" });
   }
   return handleString(szProperty, pkgPath);
 }
@@ -46,7 +49,7 @@ export async function handleString(szProperty, szPkgPath = process.cwd()) {
   try {
     pkgJSON = await fs.readJson(pkgPath);
   } catch (err) {
-    handleError("handleString", err, "readJson failed");
+    handleError(true, { fn: "handleString", err, message: "readJson failed" });
   }
   //TODO: check if pkgPath exists
   //TODO: add path-exists
@@ -59,7 +62,7 @@ export async function handleObject(szProperty, oPkgJSON) {
   let pkgJSON = oPkgJSON;
   if (is.object(pkgJSON)) {
     if (pkgJSON.hasOwnProperty(szProperty) === false) {
-      handleError("handleObject", "property not found");
+      handleError(true, { fn: "handleObject", message: "property not found" });
     } else {
       //? Feel like there's a better way to grab this value than iterating
       Object.entries(pkgJSON).map(([key, val]) => {
@@ -72,23 +75,29 @@ export async function handleObject(szProperty, oPkgJSON) {
   return propValue;
 }
 
-export function handleError(szFnName, szCustomErr, szErr) {
-  if (szFnName)
-    //TODO: Move to tacker
-    //TODO: Add initial undefined & emptyString check. Then concat all instead of piecemeal
+//TODO: Change handleError(bool, {options})
+// export function handleError(szFnName, szCustomErr, szErr) {
+
+export function handleError(bFlag, oOptions) {
+  if (is.truthy(bFlag) && is.truthy(oOptions)) {
+    let { fn, err, message } = oOptions;
+    if (fn)
+      //TODO: Move to tacker
+      //TODO: Add initial undefined & emptyString check. Then concat all instead of piecemeal
+      printLine("red");
+    if (!is.undefined(fn)) {
+      log(`${chalk.red(fn)}`);
+    }
+    if (!is.undefined(szErr)) {
+      printLine({ character: ".", color: "grey" });
+      log(`${chalk.red(szErr)}`);
+      printLine({ character: ".", color: "grey" });
+    }
+    if (!is.undefined(szCustomErr)) {
+      log(`${chalk.grey(szCustomErr)}`);
+    }
     printLine("red");
-  if (!is.undefined(szFnName)) {
-    log(`${chalk.red(szFnName)}`);
   }
-  if (!is.undefined(szErr)) {
-    printLine({ character: ".", color: "grey" });
-    log(`${chalk.grey(szErr)}`);
-    printLine({ character: ".", color: "grey" });
-  }
-  if (!is.undefined(szCustomErr)) {
-    log(`${chalk.red(szCustomErr)}`);
-  }
-  printLine("red");
   return false;
 }
 
