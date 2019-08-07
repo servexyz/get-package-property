@@ -70,9 +70,10 @@ export async function handleObject(szProperty, oPkgJSON) {
 }
 
 export function handleError(szFnName, szCustomErr, szErr) {
-  //TODO: Move to tacker
-  //TODO: Add initial undefined & emptyString check. Then concat all instead of piecemeal
-  printLine("red");
+  if (szFnName)
+    //TODO: Move to tacker
+    //TODO: Add initial undefined & emptyString check. Then concat all instead of piecemeal
+    printLine("red");
   if (!is.undefined(szFnName)) {
     log(`${chalk.red(szFnName)}`);
   }
@@ -85,6 +86,7 @@ export function handleError(szFnName, szCustomErr, szErr) {
     log(`${chalk.red(szCustomErr)}`);
   }
   printLine("red");
+  return false;
 }
 
 export async function getPkgUpJSON() {
