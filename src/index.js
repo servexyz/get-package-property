@@ -75,10 +75,7 @@ export async function handleObject(szProperty, oPkgJSON) {
   return propValue;
 }
 
-//TODO: Change handleError(bool, {options})
-// export function handleError(szFnName, szCustomErr, szErr) {
-
-export function handleError(bFlag, oOptions) {
+export function handleError(bFlag = true, oOptions) {
   if (is.truthy(bFlag) && is.truthy(oOptions)) {
     let { fn, err, message } = oOptions;
     if (fn)
@@ -88,13 +85,13 @@ export function handleError(bFlag, oOptions) {
     if (!is.undefined(fn)) {
       log(`${chalk.red(fn)}`);
     }
-    if (!is.undefined(szErr)) {
+    if (!is.undefined(err)) {
       printLine({ character: ".", color: "grey" });
-      log(`${chalk.red(szErr)}`);
+      log(`${chalk.red(err)}`);
       printLine({ character: ".", color: "grey" });
     }
-    if (!is.undefined(szCustomErr)) {
-      log(`${chalk.grey(szCustomErr)}`);
+    if (!is.undefined(message)) {
+      log(`${chalk.grey(message)}`);
     }
     printLine("red");
   }
