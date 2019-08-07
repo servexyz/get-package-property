@@ -1,6 +1,7 @@
 const log = console.log;
 import test from "ava";
 import chalk from "chalk";
+import is from "@sindresorhus/is";
 import {
   getPkgUpJSON,
   handleUndefined,
@@ -58,4 +59,15 @@ test(`${chalk.cyan("getPkgProp")} parses ${chalk.underline(
   let pkgJSON = await getPkgUpJSON();
   let shouldBeName = await getPkgProp("name", pkgJSON);
   t.is(name, shouldBeName);
+});
+
+test(`${chalk.cyan(
+  "getPkgProp"
+)} returns null if szProperty isn't defined for all handlers`, async t => {
+  t.plan(5);
+  t.true(is.nullOrUndefined(getPkgProp()));
+  t.true(is.nullOrUndefined(await handleUndefined()));
+  t.false(is.nullOrUndefined(await handleUndefined("name")));
+  t.true(is.nullOrUndefined(await handleString()));
+  t.true(is.nullOrUndefined(await handleObject()));
 });
