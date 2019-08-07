@@ -2,7 +2,7 @@
   "name": "get-pkg-prop",
   "version": "0.2.6",
   "main": "build/main.js",
-  "description": "Pass a key name, get a value from package.json",
+  "description": "Pass a key name & get the corresponding value from the intended package.json",
   "license": "MIT",
   "repository": {
     "type": "git",
