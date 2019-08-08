@@ -6,6 +6,7 @@ import fs from "fs-extra";
 import chalk from "chalk";
 import { printLine, printMirror } from "tacker";
 
+//TODO: Add option object which will accept handleError args
 export function getPkgProp(szProperty, pkg) {
   if (is.nullOrUndefined(szProperty)) return null;
   let sourceType = is(pkg);
