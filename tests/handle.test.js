@@ -77,14 +77,6 @@ test(`${chalk.cyan("handleError")} returns false`, t => {
   t.false(handleError(false));
 });
 
-test(`${chalk.cyan(
-  "getPkgProp"
-)} returns undefined when trying to grab ${chalk.underline(
-  "xyz"
-)} property`, async t => {
-  t.true(is.nullOrUndefined(await getPkgProp("xyz")));
-});
-
 test(`${chalk.cyan("getPkgProp")} returns an ${chalk.underline(
   "object"
 )}`, async t => {
@@ -93,4 +85,10 @@ test(`${chalk.cyan("getPkgProp")} returns an ${chalk.underline(
     url: "https://github.com/servexyz/get-pkg-prop"
   };
   t.deepEqual(await getPkgProp("repository"), expectedRepoProp);
+});
+
+test(`${chalk.cyan(
+  "getPkgProp"
+)} returns false when property isn't found`, async t => {
+  t.false(await getPkgProp("doesntexist"));
 });
