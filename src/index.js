@@ -18,13 +18,17 @@ export function getPkgProp(szProperty, pkg) {
       case "Object":
         return handleObject(szProperty, pkg);
       default:
-        handleError(true, {
+        return handleError(true, {
           fn: "getPkgProp",
           message: "Unrecognized argument type"
         });
     }
   } catch (err) {
-    handleError(true, { fn: "getPkgProp", message: "handler failed", err });
+    return handleError(true, {
+      fn: "getPkgProp",
+      message: "handler failed",
+      err
+    });
   }
 }
 
@@ -49,7 +53,11 @@ export async function handleString(szProperty, szPkgPath = process.cwd()) {
   try {
     pkgJSON = await fs.readJson(pkgPath);
   } catch (err) {
-    handleError(true, { fn: "handleString", err, message: "readJson failed" });
+    return handleError(true, {
+      fn: "handleString",
+      err,
+      message: "readJson failed"
+    });
   }
   //TODO: check if pkgPath exists
   //TODO: add path-exists
@@ -62,7 +70,10 @@ export async function handleObject(szProperty, oPkgJSON) {
   let pkgJSON = oPkgJSON;
   if (is.object(pkgJSON)) {
     if (pkgJSON.hasOwnProperty(szProperty) === false) {
-      handleError(true, { fn: "handleObject", message: "property not found" });
+      return handleError(true, {
+        fn: "handleObject",
+        message: "property not found"
+      });
     } else {
       //? Feel like there's a better way to grab this value than iterating
       Object.entries(pkgJSON).map(([key, val]) => {
