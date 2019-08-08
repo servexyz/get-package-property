@@ -23,17 +23,17 @@ import { getPkgProp } from "get-pkg-prop";
 ```js
 import { getPkgProp } from 'get-pkg-prop'
 
+const pkgMock = { version: "1.0.0", custom: { foo: "bar", baz: "bax" }   }
+
 (async () => {
-  
   await getPkgProp("name");
-  // returns "get-pkg-prop"
-
+  // --> "get-pkg-prop"
   await getPkgProp("version", "path/to/child/module");
-  // returns "x.y.z"
-
-  const pkgMock = { version: "1.0.0", custom: { foo: "bar", baz: "bax" }   }
+  // --> "x.y.z"
   await getPkgProp("custom", pkgMock)
-  // returns { foo: "bar", baz: "bax" }
+  // --> { foo: "bar", baz: "bax" }
+  await getPkgProp("fakeprop");
+  // --> false
 })
 ```
 
@@ -60,19 +60,15 @@ import { getPkgProp } from 'get-pkg-prop'
 
 (async () => {
   await getPkgProp("name")
-  // returns "get-pkg-prop"
+  // --> "get-pkg-prop"
   await getPkgProp("version")
-  // returns "0.2.6"
+  // --> "0.2.6"
   await getPkgProp()
-  // returns null; must provide property to check
+  // --> null; must provide property to check
   await getPkgProp("xyz")
-  // returns undefined; property must exist in package.json
+  // --> undefined; property must exist in package.json
   await getPkgProp("repository")
-  /* returns
-    {
-      "type": "git",
-      "url": "https://github.com/servexyz/get-pkg-prop"
-    }
+  // --> { "type": "git", "url": "https://github.com/servexyz/get-pkg-prop" }
   */
 })
 ```
@@ -89,6 +85,7 @@ import { getPkgProp } from 'get-pkg-prop'
 - I added this for mock testing inline package objects.
   <hr />
   </details>
+
 ```js
 import { getPkgProp } from 'get-pkg-prop'
 
@@ -97,29 +94,26 @@ const pkgMock = {
   "version": "1.0.0",
   "repository": {
       "type": "git",
-      "url": "https://github.com/servexyz/get-pkg-prop"
+      "url": "https://github.com/namespace/my-repo-pkg"
   }
 }
 
 (async () => {
   await getPkgProp("name", pkgMock)
-  // returns "my-pkg"
+  // --> "my-pkg"
   await getPkgProp("name")
-  // returns "get-pkg-prop"; defaults to current pkg when unspecified
+  // --> "get-pkg-prop"; defaults to current pkg when unspecified
   await getPkgProp("version", pkgMock)
-  // returns "0.2.6"
+  // --> "0.2.6"
   await getPkgProp("foo", pkgMock)
-  // returns null; must provide property to check
+  // --> null; must provide property to check
   await getPkgProp("xyz")
-  // returns undefined; property must exist in package.json
+  // --> undefined; property must exist in package.json
+  await getPkgProp("repository", pkgMock)
+  // -->  { "type": "git", "url": "https://github.com/namespace/my-repo-pkg" }
   await getPkgProp("repository")
-  /* pkgMock wasn't specified, it returns value of cwd package:
-    {
-      "type": "git",
-      "url": "https://github.com/servexyz/get-pkg-prop"
-    }
-  */
-
+  // pkgMock wasn't specified, it returns value of cwd package:
+  // -->  { "type": "git", "url": "https://github.com/servexyz/get-pkg-prop" }
 })
 ```
 
@@ -143,23 +137,17 @@ import { getPkgProp } from 'get-pkg-prop'
 
 (async () => {
   await getPkgProp("name")
-  // returns "get-pkg-prop"; defaults to current pkg when unspecifeid
+  // --> "get-pkg-prop"; defaults to current pkg when unspecifeid
   await getPkgProp("name", "path/to/child/module")
-  // returns "child-module-name"
+  // --> "child-module-name"
   await getPkgProp("version", "path/to/child/module")
-  // returns "x.y.z"
+  // --> "x.y.z"
   await getPkgProp(,"path/to/child/module")
-  // returns null; must provide property to check
+  // --> null; must provide property to check
   await getPkgProp("xyz", "path/to/child/module")
-  // returns undefined; property must exist in package.json
+  // --> undefined; property must exist in package.json
   await getPkgProp("repository", "path/to/child/module")
-  /* returns
-    {
-      "type": "git",
-      "url": "https://github.com/namespace/child-module-name"
-    }
-  */
-
+  // --> { "type": "git", "url": "https://github.com/namespace/child-module-name" }
 })
 ```
 
