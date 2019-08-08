@@ -66,7 +66,7 @@ import { getPkgProp } from 'get-pkg-prop'
   await getPkgProp()
   // --> null; must provide property to check
   await getPkgProp("xyz")
-  // --> undefined; property must exist in package.json
+  // --> false; property must exist in package.json
   await getPkgProp("repository")
   // --> { "type": "git", "url": "https://github.com/servexyz/get-pkg-prop" }
   */
@@ -105,10 +105,10 @@ const pkgMock = {
   // --> "get-pkg-prop"; defaults to current pkg when unspecified
   await getPkgProp("version", pkgMock)
   // --> "0.2.6"
-  await getPkgProp("foo", pkgMock)
+  await getPkgProp(, pkgMock)
   // --> null; must provide property to check
   await getPkgProp("xyz")
-  // --> undefined; property must exist in package.json
+  // --> false; property must exist in package.json
   await getPkgProp("repository", pkgMock)
   // -->  { "type": "git", "url": "https://github.com/namespace/my-repo-pkg" }
   await getPkgProp("repository")
@@ -127,13 +127,15 @@ const pkgMock = {
 
 - Specifying the path allows you to access the package of sub-modules or installed dependencies.
 
+<b>Note</b>
+
+- <em>"path/to/child/module"</em> and <em>"path/to/child/module/package.json"</em> are processed equally
+
 <hr />
 </details>
 
 ```js
 import { getPkgProp } from 'get-pkg-prop'
-
-// NOTE: "path/to/child/module" and "path/to/child/module/package.json" are processed equally
 
 (async () => {
   await getPkgProp("name")
@@ -145,7 +147,7 @@ import { getPkgProp } from 'get-pkg-prop'
   await getPkgProp(,"path/to/child/module")
   // --> null; must provide property to check
   await getPkgProp("xyz", "path/to/child/module")
-  // --> undefined; property must exist in package.json
+  // --> false; property must exist in package.json
   await getPkgProp("repository", "path/to/child/module")
   // --> { "type": "git", "url": "https://github.com/namespace/child-module-name" }
 })
@@ -174,5 +176,14 @@ I wanted to have a more diverse API for different situations.
 </ul>
 
 </li>
+</ul>
+</details>
+
+<details><summary><code>return</code> scheme</summary>
+
+<ul>
+<li><code>&lt;null&gt;</code> - Whenever the <em>&lt;string&gt; szProperty</em> parameter is missing</li>
+<li><code>&lt;string&gt;</code> - Whenever the property is found and extracted from the specified package object</li>
+<li><code>&lt;false&gt;</code> - Whenever the property does not exist in the specified package object</li>
 </ul>
 </details>
